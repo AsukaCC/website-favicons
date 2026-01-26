@@ -10,6 +10,7 @@
 import ColorInput from "@/components/ColorInput";
 import type { Icon } from "@/types/icon";
 import styles from "@/styles/components/IconCard.module.css";
+import { getAssetPath } from "@/utils/path";
 
 /**
  * SVG 图标组件
@@ -103,7 +104,7 @@ export default function IconCard({
           {/* 如果图标路径存在，渲染 IconImage 组件 */}
           {icon.path ? (
             <IconImage
-              src={icon.path}
+              src={getAssetPath(icon.path)}
               color={getIconColor(icon)}
             />
           ) : (

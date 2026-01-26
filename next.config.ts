@@ -10,8 +10,10 @@ const nextConfig: NextConfig = {
   reactStrictMode: true,
   // 静态导出配置，用于 GitHub Pages
   output: "export",
-  // 如果仓库名称不是 username.github.io，取消下面的注释并设置正确的 basePath
+  // 如果仓库名称不是 username.github.io，设置 basePath
   ...(basePath && { basePath }),
+  // 设置 assetPrefix 与 basePath 相同，确保静态资源路径正确
+  ...(basePath && { assetPrefix: basePath }),
   // GitHub Pages 不支持 Next.js 图片优化，如果使用 next/image，需要取消下面的注释
   // images: {
   //   unoptimized: true,
