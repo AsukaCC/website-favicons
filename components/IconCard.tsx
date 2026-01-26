@@ -7,7 +7,7 @@
  * - 支持查看和下载操作
  */
 
-import ColorInput from "@/pages/components/ColorInput";
+import ColorInput from "@/components/ColorInput";
 import type { Icon } from "@/types/icon";
 import styles from "@/styles/components/IconCard.module.css";
 

@@ -1,9 +1,9 @@
 import { useState, useRef } from "react";
 import Head from "next/head";
-import Navigation from "@/pages/components/Navigation";
-import Footer from "@/pages/components/Footer";
-import { useLanguage } from "@/pages/components/LanguageContext";
-import { useTheme } from "@/pages/components/ThemeContext";
+import Navigation from "@/components/Navigation";
+import Footer from "@/components/Footer";
+import { useLanguage } from "@/components/LanguageContext";
+import { useTheme } from "@/components/ThemeContext";
 import { getTranslation } from "@/locales";
 import styles from "@/styles/pages/Tools.module.css";
 

@@ -11,11 +11,11 @@
 
 import { useState, useEffect, useMemo, useCallback } from "react";
 import Head from "next/head";
-import Navigation from "@/pages/components/Navigation";
-import Footer from "@/pages/components/Footer";
-import IconCard from "@/pages/components/IconCard";
-import { useLanguage } from "@/pages/components/LanguageContext";
-import { useTheme } from "@/pages/components/ThemeContext";
+import Navigation from "@/components/Navigation";
+import Footer from "@/components/Footer";
+import IconCard from "@/components/IconCard";
+import { useLanguage } from "@/components/LanguageContext";
+import { useTheme } from "@/components/ThemeContext";
 import { getTranslation } from "@/locales";
 import iconsData from "@/data/icons.json";
 import type { Icon } from "@/types/icon";
