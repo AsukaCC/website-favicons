@@ -1,0 +1,152 @@
+/* 图标卡片容器 */
+.iconCard {
+  background-color: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  transition: all 0.2s;
+  cursor: pointer;
+  position: relative;
+}
+
+.iconCard:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border-color: var(--primary-color);
+}
+
+/* SVG 图标 */
+.iconSvg {
+  width: 64px;
+  height: 64px;
+}
+
+/* 图标预览链接 */
+.iconPreviewLink {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* 图标预览容器 */
+.iconPreview {
+  width: 64px;
+  height: 64px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 8px;
+}
+
+/* 图标占位符 */
+.iconPlaceholder {
+  font-size: 32px;
+  font-weight: 700;
+  color: white;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+/* 图标名称 */
+.iconName {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--foreground);
+  text-align: center;
+  word-break: break-word;
+}
+
+/* 图标描述 */
+.iconDescription {
+  font-size: 12px;
+  color: var(--text-secondary);
+  text-align: center;
+  word-break: break-word;
+}
+
+/* 图标操作栏 */
+.iconActions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  justify-content: space-between;
+  padding-top: 8px;
+  border-top: 1px solid var(--border-color);
+}
+
+/* 颜色选择器包装器 */
+.colorPickerWrapper {
+  position: relative;
+  flex: 1;
+}
+
+/* 图标颜色显示 */
+.iconColor {
+  font-size: 12px;
+  font-family: monospace;
+  color: var(--text-secondary);
+  flex: 1;
+}
+
+/* 颜色选择器容器 */
+.colorPickerContainer {
+  position: absolute;
+  width: 150%;
+  top: calc(100% + 8px);
+  left: 0;
+  background-color: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  z-index: 10;
+}
+
+:global(.dark) .colorPickerContainer {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+/* 重置颜色按钮 */
+.resetColorButton {
+  padding: 6px 12px;
+  border: 1px solid var(--border-color);
+  background-color: var(--button-group-bg);
+  color: var(--foreground);
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 12px;
+  transition: all 0.2s;
+}
+
+.resetColorButton:hover {
+  background-color: var(--button-hover-bg);
+  border-color: var(--primary-color);
+}
+
+/* 图标操作按钮 */
+.iconActionButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border: none;
+  background: transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+  border-radius: 6px;
+  transition: all 0.2s;
+  padding: 0;
+}
+
+.iconActionButton:hover {
+  background-color: var(--button-hover-bg);
+  color: var(--foreground);
+}

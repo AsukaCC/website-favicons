@@ -1,0 +1,52 @@
+{
+  "common": {
+    "language": "Language",
+    "chinese": "中文",
+    "english": "English",
+    "home": "Home",
+    "tools": "Tools",
+    "download": "Download",
+    "clear": "Clear",
+    "reset": "Reset",
+    "copy": "Copy code",
+    "viewDetails": "View details",
+    "changeColor": "Click to change color",
+    "resetColor": "Reset to original color"
+  },
+  "home": {
+    "title": "Website Favicons",
+    "subtitle": "{count} SVG icons for popular brands",
+    "logoSubtitle": "SVG icons for popular brands",
+    "searchPlaceholder": "Search by brand...",
+    "theme": "Theme",
+    "lightMode": "Light mode",
+    "darkMode": "Dark mode",
+    "autoMode": "Auto mode",
+    "downloadFormat": "Download format",
+    "layout": "Layout",
+    "gridLayout": "Grid layout",
+    "compactLayout": "Compact layout",
+    "sort": "Sort"
+  },
+  "tools": {
+    "title": "SVG Icon Tools - Website Favicons",
+    "description": "Online SVG editor tool, modify and generate icons",
+    "svgEditor": "SVG Editor",
+    "preview": "Preview",
+    "exportSettings": "Export Settings",
+    "iconName": "Icon Name",
+    "iconSize": "Icon Size (PNG)",
+    "backgroundColor": "Background Color (PNG)",
+    "previewSize": "Preview Size",
+    "downloadSVG": "Download SVG",
+    "downloadPNG": "Download PNG",
+    "svgCodePlaceholder": "Enter SVG code here...",
+    "svgFormatError": "SVG format error, please check the code",
+    "svgCopied": "SVG code copied to clipboard",
+    "px": "px"
+  },
+  "footer": {
+    "copyright": "© 2025 Website Favicons. All rights reserved.",
+    "github": "GitHub"
+  }
+}
