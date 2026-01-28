@@ -314,7 +314,7 @@ export default function Home() {
         <title>{t.title}</title>
         <meta name="description" content={t.subtitle.replace("{count}", icons.length.toString())} />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="icon" href="/favicon.ico" />
+        <link rel="icon" href={getAssetPath("/favicon.ico")} />
       </Head>
       <div className={styles.page}>
         {/* 导航栏 */}

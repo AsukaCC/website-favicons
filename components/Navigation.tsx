@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useRouter } from "next/router";
 import { useLanguage } from "./LanguageContext";
 import { getTranslation } from "@/locales";
+import { getAssetPath } from "@/utils/path";
 import styles from "@/styles/components/Navigation.module.css";
 
 export default function Navigation() {
@@ -23,7 +24,7 @@ export default function Navigation() {
         <Link href="/" className={styles.logo}>
           <div className={styles.logoImageWrapper}>
             <Image
-              src="/logo.png"
+              src={getAssetPath("/logo.png")}
               alt="Logo"
               width={40}
               height={40}

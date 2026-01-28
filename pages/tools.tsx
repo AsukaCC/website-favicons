@@ -7,6 +7,7 @@ import { useLanguage } from "@/components/LanguageContext";
 import { useTheme } from "@/components/ThemeContext";
 import { getTranslation } from "@/locales";
 import { modifySvgColor } from "@/utils/svg";
+import { getAssetPath } from "@/utils/path";
 import ColorInput from "@/components/ColorInput";
 import styles from "@/styles/pages/Tools.module.css";
 
@@ -215,7 +216,7 @@ export default function Tools() {
         <title>{t.title}</title>
         <meta name="description" content={t.description} />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="icon" href="/favicon.ico" />
+        <link rel="icon" href={getAssetPath("/favicon.ico")} />
       </Head>
       <div className={styles.page}>
         <Navigation />
