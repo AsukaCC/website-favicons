@@ -5,12 +5,19 @@
  * - 显示图标预览、名称和描述
  * - 支持颜色选择和修改
  * - 支持查看和下载操作
+ * - 支持复制 SVG/PNG 到剪贴板
  */
 
+import { useState } from "react";
 import ColorInput from "@/components/ColorInput";
 import type { Icon } from "@/types/icon";
 import styles from "@/styles/components/IconCard.module.css";
 import { getAssetPath } from "@/utils/path";
+import { getContrastingTextColor } from "@/utils/color";
+import { copySVGToClipboard, copyPNGToClipboard } from "@/utils/clipboard";
+import { useToast } from "@/components/ToastContext";
+import { useLanguage } from "@/components/LanguageContext";
+import { getTranslation } from "@/locales";
 
 /**
  * SVG 图标组件
@@ -48,18 +55,16 @@ interface IconCardProps {
   icon: Icon;
   /** 当前语言 */
   language: "zh" | "en";
-  /** 当前正在编辑颜色的图标 ID */
-  editingColorIconId: string | null;
+  /** 当前正在编辑颜色的图标 URL */
+  editingColorIconUrl: string | null;
   /** 获取图标颜色的函数 */
   getIconColor: (icon: Icon) => string;
   /** 颜色变更处理函数 */
-  handleColorChange: (iconId: string, color: string) => void;
+  handleColorChange: (iconUrl: string, color: string) => void;
   /** 颜色点击处理函数 */
-  handleColorClick: (iconId: string, event: React.MouseEvent) => void;
+  handleColorClick: (iconUrl: string, event: React.MouseEvent) => void;
   /** 重置颜色处理函数 */
-  handleResetColor: (iconId: string) => void;
-  /** 查看处理函数 */
-  handleView: (icon: Icon) => void;
+  handleResetColor: (iconUrl: string) => void;
   /** 下载处理函数 */
   handleDownload: (icon: Icon) => void;
   /** 通用翻译文本 */
@@ -68,6 +73,7 @@ interface IconCardProps {
     resetColor?: string;
     reset?: string;
     viewDetails: string;
+    edit?: string;
     download: string;
   };
 }
@@ -78,34 +84,125 @@ interface IconCardProps {
 export default function IconCard({
   icon,
   language,
-  editingColorIconId,
+  editingColorIconUrl,
   getIconColor,
   handleColorChange,
   handleColorClick,
   handleResetColor,
-  handleView,
   handleDownload,
   tCommon,
 }: IconCardProps) {
+  const iconColor = getIconColor(icon);
+  const iconColorText = getContrastingTextColor(iconColor);
+  const [showCopyMenu, setShowCopyMenu] = useState(false);
+  const [isCopying, setIsCopying] = useState(false);
+  const { showToast } = useToast();
+  const { language: currentLanguage } = useLanguage();
+  const tCommonLocal = getTranslation(currentLanguage).common;
+
+  const iconUrl = icon.url.startsWith("http") ? icon.url : `https://${icon.url}`;
+
+  // 复制 SVG 到剪贴板
+  const copySVG = async () => {
+    if (!icon.path || isCopying) return;
+    
+    setIsCopying(true);
+    try {
+      await copySVGToClipboard(icon.path, iconColor);
+      setShowCopyMenu(false);
+      showToast(tCommonLocal.svgCopied, "success");
+    } catch (error) {
+      console.error("Failed to copy SVG:", error);
+      showToast(tCommonLocal.copyFailed, "error");
+    } finally {
+      setIsCopying(false);
+    }
+  };
+
+  // 复制 PNG 到剪贴板
+  const copyPNG = async () => {
+    if (!icon.path || isCopying) return;
+    
+    setIsCopying(true);
+    try {
+      await copyPNGToClipboard(icon.path, iconColor);
+      setShowCopyMenu(false);
+      showToast(tCommonLocal.pngCopied, "success");
+    } catch (error) {
+      console.error("Failed to copy PNG:", error);
+      showToast(tCommonLocal.copyFailed, "error");
+    } finally {
+      setIsCopying(false);
+    }
+  };
+
+  // 编辑 SVG：在新标签页打开 tools 页面
+  const handleEdit = async () => {
+    if (!icon.path) return;
+    
+    try {
+      // 获取 SVG 内容
+      const svgPath = getAssetPath(icon.path);
+      const response = await fetch(svgPath);
+      const svgText = await response.text();
+      
+      // 修改 SVG 颜色
+      const parser = new DOMParser();
+      const svgDoc = parser.parseFromString(svgText, "image/svg+xml");
+      const svgElement = svgDoc.documentElement;
+      
+      // 如果 SVG 有 fill 属性，修改为当前颜色
+      if (svgElement.hasAttribute("fill")) {
+        svgElement.setAttribute("fill", iconColor);
+      } else {
+        svgElement.setAttribute("fill", iconColor);
+      }
+      
+      // 序列化修改后的 SVG
+      const serializer = new XMLSerializer();
+      const modifiedSvg = serializer.serializeToString(svgElement);
+      
+      // 将 SVG 内容编码后通过 URL 参数传递
+      const encodedSvg = encodeURIComponent(modifiedSvg);
+      const encodedName = encodeURIComponent(icon.name);
+      
+      // 在新标签页打开 tools 页面，传递 SVG 内容和名称
+      const toolsUrl = `/tools?svg=${encodedSvg}&name=${encodedName}`;
+      window.open(toolsUrl, "_blank", "noopener,noreferrer");
+    } catch (error) {
+      console.error("Failed to open editor:", error);
+      showToast(tCommonLocal.editFailed || "打开编辑器失败", "error");
+    }
+  };
+
   return (
-    <div className={styles.iconCard} data-icon-id={icon.id}>
-      {/* 图标预览链接 */}
+    <div className={styles.iconCard} data-icon-url={icon.url}>
+      {/* 右上角链接图标 */}
       <a
-        href={icon.url}
+        href={iconUrl}
         target="_blank"
         rel="noopener noreferrer"
-        className={styles.iconPreviewLink}
-        onClick={(e) => {
-          e.preventDefault();
-          handleView(icon);
-        }}
+        className={styles.externalLink}
+        onClick={(e) => e.stopPropagation()}
+        title={iconUrl}
+      >
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+          <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
+          <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
+        </svg>
+      </a>
+      {/* 图标预览区域 */}
+      <div 
+        className={styles.iconPreviewContainer}
+        onMouseEnter={() => setShowCopyMenu(true)}
+        onMouseLeave={() => setShowCopyMenu(false)}
       >
         <div className={styles.iconPreview}>
           {/* 如果图标路径存在，渲染 IconImage 组件 */}
           {icon.path ? (
             <IconImage
               src={getAssetPath(icon.path)}
-              color={getIconColor(icon)}
+              color={iconColor}
             />
           ) : (
             /* 占位符：当图标路径不存在时显示图标名称的首字母 */
@@ -114,7 +211,42 @@ export default function IconCard({
             </span>
           )}
         </div>
-      </a>
+        {/* 复制菜单 */}
+        {showCopyMenu && icon.path && (
+          <div className={styles.copyMenu}>
+            <button
+              className={styles.copyButton}
+              onClick={(e) => {
+                e.stopPropagation();
+                copySVG();
+              }}
+              disabled={isCopying}
+              title="复制 SVG"
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
+                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+              </svg>
+              <span>SVG</span>
+            </button>
+            <button
+              className={styles.copyButton}
+              onClick={(e) => {
+                e.stopPropagation();
+                copyPNG();
+              }}
+              disabled={isCopying}
+              title="复制 PNG"
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
+                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+              </svg>
+              <span>PNG</span>
+            </button>
+          </div>
+        )}
+      </div>
       {/* 图标名称 */}
       <div className={styles.iconName}>{icon.name}</div>
       {/* 图标描述（根据当前语言显示） */}
@@ -130,25 +262,29 @@ export default function IconCard({
           <div
 
             className={styles.iconColor}
-            onClick={(e) => handleColorClick(icon.id, e)}
+            onClick={(e) => handleColorClick(icon.url, e)}
             title={tCommon.changeColor || "点击更改颜色"}
-            style={{ cursor: "pointer" }}
+            style={{
+              cursor: "pointer",
+              backgroundColor: iconColor,
+              color: iconColorText,
+            }}
           >
-            {getIconColor(icon)}
+            {iconColor}
           </div>
           {/* 颜色选择器（absolute 定位） */}
-          {editingColorIconId === icon.id && (
+          {editingColorIconUrl === icon.url && (
             <div
               className={styles.colorPickerContainer}
               onClick={(e) => e.stopPropagation()}
             >
               <ColorInput
-                value={getIconColor(icon)}
-                onChange={(color) => handleColorChange(icon.id, color)}
+                value={iconColor}
+                onChange={(color) => handleColorChange(icon.url, color)}
               />
               <button
                 className={styles.resetColorButton}
-                onClick={() => handleResetColor(icon.id)}
+                onClick={() => handleResetColor(icon.url)}
                 title={tCommon.resetColor || "重置为原始颜色"}
               >
                 {tCommon.reset || "重置"}
@@ -156,15 +292,15 @@ export default function IconCard({
             </div>
           )}
         </div>
-        {/* 查看详情按钮 */}
+        {/* 编辑按钮 */}
         <button
           className={styles.iconActionButton}
-          onClick={() => handleView(icon)}
-          title={tCommon.viewDetails}
+          onClick={handleEdit}
+          title={tCommon.edit || "编辑"}
         >
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
-            <circle cx="12" cy="12" r="3" />
+            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
           </svg>
         </button>
         {/* 下载按钮 */}

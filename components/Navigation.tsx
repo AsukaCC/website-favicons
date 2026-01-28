@@ -1,5 +1,6 @@
 import { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { useRouter } from "next/router";
 import { useLanguage } from "./LanguageContext";
 import { getTranslation } from "@/locales";
@@ -20,19 +21,32 @@ export default function Navigation() {
     <header className={styles.header}>
       <div className={styles.headerContent}>
         <Link href="/" className={styles.logo}>
-          <h1 className={styles.logoTitle}>{tHome.title}</h1>
-          <p className={styles.logoSubtitle}>
-            {tHome.logoSubtitle}
-          </p>
+          <div className={styles.logoImageWrapper}>
+            <Image
+              src="/logo.png"
+              alt="Logo"
+              width={40}
+              height={40}
+              className={styles.logoImage}
+            />
+          </div>
+          <div className={styles.logoText}>
+            <h1 className={styles.logoTitle}>{tHome.title}</h1>
+            <p className={styles.logoSubtitle}>
+              {tHome.logoSubtitle}
+            </p>
+          </div>
         </Link>
         <nav className={styles.nav}>
-          <Link href="/" className={`${styles.navPageLink} ${isHome ? styles.active : ""}`}>
-            {tCommon.home}
-          </Link>
-          <Link href="/tools" className={`${styles.navPageLink} ${isTools ? styles.active : ""}`}>
-            {tCommon.tools}
-          </Link>
-          <div className={styles.navDivider}></div>
+          <div className={styles.navLinks}>
+            <Link href="/" className={`${styles.navPageLink} ${isHome ? styles.active : ""}`}>
+              {tCommon.home}
+            </Link>
+            <Link href="/tools" className={`${styles.navPageLink} ${isTools ? styles.active : ""}`}>
+              {tCommon.tools}
+            </Link>
+            <div className={styles.navDivider}></div>
+          </div>
           <div className={styles.languageDropdown}>
             <button
               className={styles.navLink}

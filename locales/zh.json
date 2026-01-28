@@ -10,8 +10,14 @@
     "reset": "重置",
     "copy": "复制代码",
     "viewDetails": "查看详情",
+    "edit": "编辑",
     "changeColor": "点击更改颜色",
-    "resetColor": "重置为原始颜色"
+    "resetColor": "重置为原始颜色",
+    "editFailed": "打开编辑器失败",
+    "copied": "已复制到剪贴板",
+    "svgCopied": "SVG 已复制到剪贴板",
+    "pngCopied": "PNG 已复制到剪贴板",
+    "copyFailed": "复制失败"
   },
   "home": {
     "title": "Website Favicons",
@@ -36,7 +42,7 @@
     "exportSettings": "导出设置",
     "iconName": "图标名称",
     "iconSize": "图标尺寸 (PNG)",
-    "backgroundColor": "背景颜色 (PNG)",
+    "iconColor": "图标颜色",
     "previewSize": "预览大小",
     "downloadSVG": "下载 SVG",
     "downloadPNG": "下载 PNG",

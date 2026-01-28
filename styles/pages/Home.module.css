@@ -382,18 +382,6 @@ a.navLink {
   border-top: 1px solid var(--border-color);
 }
 
-.iconColor {
-  font-size: 12px;
-  font-family: monospace;
-  color: var(--text-secondary);
-  flex: 1;
-  user-select: none;
-  transition: color 0.2s;
-}
-
-.iconColor:hover {
-  color: var(--foreground);
-}
 
 /* 颜色选择器容器 */
 .colorPickerWrapper {
@@ -401,27 +389,6 @@ a.navLink {
   flex: 1;
 }
 
-.colorPickerContainer {
-  position: absolute;
-  top: 100%;
-  left: 0;
-  margin-top: 8px;
-  background-color: var(--card-bg);
-  border: 1px solid var(--border-color);
-  border-radius: 8px;
-  padding: 12px;
-  z-index: 100;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  z-index: 10000; /* 非常高的 z-index 确保在最上层 */
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  min-width: 180px;
-}
-
-:global(.dark) .colorPickerContainer {
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
-}
 
 .colorInput {
   width: 100%;

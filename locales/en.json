@@ -10,8 +10,14 @@
     "reset": "Reset",
     "copy": "Copy code",
     "viewDetails": "View details",
+    "edit": "Edit",
     "changeColor": "Click to change color",
-    "resetColor": "Reset to original color"
+    "resetColor": "Reset to original color",
+    "editFailed": "Failed to open editor",
+    "copied": "Copied to clipboard",
+    "svgCopied": "SVG copied to clipboard",
+    "pngCopied": "PNG copied to clipboard",
+    "copyFailed": "Copy failed"
   },
   "home": {
     "title": "Website Favicons",
@@ -36,7 +42,7 @@
     "exportSettings": "Export Settings",
     "iconName": "Icon Name",
     "iconSize": "Icon Size (PNG)",
-    "backgroundColor": "Background Color (PNG)",
+    "iconColor": "Icon Color",
     "previewSize": "Preview Size",
     "downloadSVG": "Download SVG",
     "downloadPNG": "Download PNG",

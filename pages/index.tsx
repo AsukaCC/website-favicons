@@ -19,6 +19,7 @@ import { useTheme } from "@/components/ThemeContext";
 import { getTranslation } from "@/locales";
 import iconsData from "@/data/icons.json";
 import type { Icon } from "@/types/icon";
+import { getAssetPath } from "@/utils/path";
 import styles from "@/styles/pages/Home.module.css";
 import iconCardStyles from "@/styles/components/IconCard.module.css";
 
@@ -55,8 +56,8 @@ export default function Home() {
     // 深拷贝原始数据，避免直接修改原始数据
     return JSON.parse(JSON.stringify(originalIcons));
   });
-  // 当前正在编辑颜色的图标 ID
-  const [editingColorIconId, setEditingColorIconId] = useState<string | null>(null);
+  // 当前正在编辑颜色的图标 URL
+  const [editingColorIconUrl, setEditingColorIconUrl] = useState<string | null>(null);
 
   // 获取翻译文本
   const t = getTranslation(language).home;
@@ -65,23 +66,23 @@ export default function Home() {
   // 点击外部关闭颜色选择器
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (editingColorIconId) {
+      if (editingColorIconUrl) {
         const target = event.target as HTMLElement;
         // 如果点击的不是颜色选择器相关的元素，则关闭
         const pickerContainer = document.querySelector(`.${iconCardStyles.colorPickerContainer}`);
         if (!pickerContainer || !pickerContainer.contains(target)) {
-          setEditingColorIconId(null);
+          setEditingColorIconUrl(null);
         }
       }
     };
 
-    if (editingColorIconId) {
+    if (editingColorIconUrl) {
       document.addEventListener("mousedown", handleClickOutside);
       return () => {
         document.removeEventListener("mousedown", handleClickOutside);
       };
     }
-  }, [editingColorIconId]);
+  }, [editingColorIconUrl]);
 
   /**
    * 根据搜索关键词过滤图标
@@ -94,12 +95,145 @@ export default function Home() {
   }, [searchQuery, icons]);
 
   /**
+   * 从 URL 生成文件名
+   * @param url - 图标 URL（例如：baidu.com 或 https://baidu.com）
+   * @returns 文件名（例如：baidu.com）
+   */
+  const getFileNameFromUrl = (url: string): string => {
+    // 移除协议前缀（http:// 或 https://）
+    let cleanUrl = url.replace(/^https?:\/\//, "");
+    // 移除末尾的斜杠
+    cleanUrl = cleanUrl.replace(/\/$/, "");
+    // 替换特殊字符为下划线（用于文件名）
+    cleanUrl = cleanUrl.replace(/[<>:"/\\|?*]/g, "_");
+    return cleanUrl;
+  };
+
+  /**
    * 处理图标下载
    * @param icon - 要下载的图标对象
    */
-  const handleDownload = (icon: Icon) => {
-    console.log(`Downloading ${icon.name} as ${downloadFormat}`);
-    // 这里可以实现实际的下载逻辑
+  const handleDownload = async (icon: Icon) => {
+    if (!icon.path) {
+      console.error("Icon path is missing");
+      return;
+    }
+
+    const iconColor = getIconColor(icon);
+    const svgPath = getAssetPath(icon.path);
+    const fileName = getFileNameFromUrl(icon.url);
+
+    try {
+      // 获取 SVG 文件内容
+      const response = await fetch(svgPath);
+      if (!response.ok) {
+        throw new Error(`Failed to fetch SVG: ${response.statusText}`);
+      }
+      let svgContent = await response.text();
+
+      // 修改 SVG 中的颜色
+      // 使用 DOM 解析器来修改 SVG
+      const parser = new DOMParser();
+      const svgDoc = parser.parseFromString(svgContent, "image/svg+xml");
+      const svgElement = svgDoc.documentElement;
+
+      // 检查是否有解析错误
+      const parserError = svgDoc.querySelector("parsererror");
+      if (parserError) {
+        throw new Error("Invalid SVG format");
+      }
+
+      // 递归设置所有元素的 fill 和 stroke 属性
+      const setColorRecursive = (element: Element) => {
+        // 跳过 defs、style、script 等特殊元素
+        const tagName = element.tagName.toLowerCase();
+        if (tagName === "defs" || tagName === "style" || tagName === "script") {
+          return;
+        }
+
+        // 设置 fill 属性（跳过明确设置为 "none" 的元素）
+        const currentFill = element.getAttribute("fill");
+        if (currentFill !== "none") {
+          element.setAttribute("fill", iconColor);
+        }
+
+        // 设置 stroke 属性（如果元素有 stroke 且不是 "none"）
+        const currentStroke = element.getAttribute("stroke");
+        if (currentStroke && currentStroke !== "none") {
+          element.setAttribute("stroke", iconColor);
+        }
+
+        // 递归处理子元素
+        Array.from(element.children).forEach(setColorRecursive);
+      };
+
+      setColorRecursive(svgElement);
+
+      // 将修改后的 SVG 转换回字符串
+      svgContent = new XMLSerializer().serializeToString(svgElement);
+
+      if (downloadFormat === "SVG") {
+        // 下载 SVG
+        const blob = new Blob([svgContent], { type: "image/svg+xml" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `${fileName}.svg`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+      } else if (downloadFormat === "PNG") {
+        // 下载 PNG：将 SVG 转换为 Canvas，然后导出为 PNG
+        const canvas = document.createElement("canvas");
+        const size = 512; // PNG 导出尺寸
+        canvas.width = size;
+        canvas.height = size;
+        const ctx = canvas.getContext("2d");
+
+        if (!ctx) {
+          throw new Error("Failed to get canvas context");
+        }
+
+        // 创建图片对象
+        const img = new Image();
+        const svgBlob = new Blob([svgContent], { type: "image/svg+xml" });
+        const svgUrl = URL.createObjectURL(svgBlob);
+
+        img.onload = () => {
+          // 清空画布（透明背景）
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+          
+          // 绘制 SVG 图片
+          ctx.drawImage(img, 0, 0, size, size);
+          
+          // 转换为 PNG Blob 并下载
+          canvas.toBlob((blob) => {
+            if (blob) {
+              const downloadUrl = URL.createObjectURL(blob);
+              const a = document.createElement("a");
+              a.href = downloadUrl;
+              a.download = `${fileName}.png`;
+              document.body.appendChild(a);
+              a.click();
+              document.body.removeChild(a);
+              URL.revokeObjectURL(downloadUrl);
+            }
+            URL.revokeObjectURL(svgUrl);
+          }, "image/png");
+        };
+
+        img.onerror = () => {
+          URL.revokeObjectURL(svgUrl);
+          throw new Error("Failed to load SVG image");
+        };
+
+        img.src = svgUrl;
+      }
+    } catch (error) {
+      console.error("Download error:", error);
+      alert(`下载失败: ${error instanceof Error ? error.message : "未知错误"}`);
+    }
   };
 
   /**
@@ -109,7 +243,8 @@ export default function Home() {
    */
   const handleView = (icon: Icon) => {
     if (icon.url) {
-      window.open(icon.url, "_blank", "noopener,noreferrer");
+      const fullUrl = icon.url.startsWith("http") ? icon.url : `https://${icon.url}`;
+      window.open(fullUrl, "_blank", "noopener,noreferrer");
     }
   };
 
@@ -124,13 +259,13 @@ export default function Home() {
 
   /**
    * 处理颜色变更
-   * @param iconId - 图标 ID
+   * @param iconUrl - 图标 URL
    * @param newColor - 新颜色值
    */
-  const handleColorChange = useCallback((iconId: string, newColor: string) => {
+  const handleColorChange = useCallback((iconUrl: string, newColor: string) => {
     setIcons((prevIcons) => {
       return prevIcons.map((icon) => {
-        if (icon.id === iconId) {
+        if (icon.url === iconUrl) {
           // 如果颜色没有改变，不更新
           if (icon.color === newColor) {
             return icon;
@@ -144,32 +279,32 @@ export default function Home() {
 
   /**
    * 处理颜色点击，显示/隐藏颜色选择器
-   * @param iconId - 图标 ID
+   * @param iconUrl - 图标 URL
    * @param event - 点击事件
    */
-  const handleColorClick = (iconId: string, event: React.MouseEvent) => {
+  const handleColorClick = (iconUrl: string, event: React.MouseEvent) => {
     event.stopPropagation();
     // 切换颜色选择器的显示状态
-    setEditingColorIconId(editingColorIconId === iconId ? null : iconId);
+    setEditingColorIconUrl(editingColorIconUrl === iconUrl ? null : iconUrl);
   };
 
   /**
    * 重置图标颜色为原始颜色
-   * @param iconId - 图标 ID
+   * @param iconUrl - 图标 URL
    */
-  const handleResetColor = (iconId: string) => {
-    const originalIcon = originalIcons.find((icon) => icon.id === iconId);
+  const handleResetColor = (iconUrl: string) => {
+    const originalIcon = originalIcons.find((icon) => icon.url === iconUrl);
     if (originalIcon) {
       setIcons((prevIcons) => {
         return prevIcons.map((icon) => {
-          if (icon.id === iconId) {
+          if (icon.url === iconUrl) {
             return { ...icon, color: originalIcon.color };
           }
           return icon;
         });
       });
     }
-    setEditingColorIconId(null);
+    setEditingColorIconUrl(null);
   };
 
   return (
@@ -317,19 +452,21 @@ export default function Home() {
         {/* 图标展示区域 */}
         <main className={styles.main}>
           {/* 根据布局模式选择不同的 CSS 类 */}
-          <div className={layout === "grid" ? styles.iconGrid : styles.iconGridCompact}>
+          <div
+            className={layout === "grid" ? styles.iconGrid : styles.iconGridCompact}
+            data-layout={layout}
+          >
             {/* 遍历过滤后的图标列表 */}
             {filteredIcons.map((icon) => (
               <IconCard
-                key={icon.id}
+                key={icon.url}
                 icon={icon}
                 language={language}
-                editingColorIconId={editingColorIconId}
+                editingColorIconUrl={editingColorIconUrl}
                 getIconColor={getIconColor}
                 handleColorChange={handleColorChange}
                 handleColorClick={handleColorClick}
                 handleResetColor={handleResetColor}
-                handleView={handleView}
                 handleDownload={handleDownload}
                 tCommon={tCommon}
               />

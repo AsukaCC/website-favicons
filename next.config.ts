@@ -15,9 +15,9 @@ const nextConfig: NextConfig = {
   // 设置 assetPrefix 与 basePath 相同，确保静态资源路径正确
   ...(basePath && { assetPrefix: basePath }),
   // GitHub Pages 不支持 Next.js 图片优化，如果使用 next/image，需要取消下面的注释
-  // images: {
-  //   unoptimized: true,
-  // },
+  images: {
+    unoptimized: true,
+  },
 };
 
 export default nextConfig;

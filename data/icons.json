@@ -1,212 +1,92 @@
 [
   {
-    "id": "1",
-    "name": "阿里云",
-    "path": "/icons/aliyun.svg",
-    "color": "#FF6A00",
-    "url": "https://www.aliyun.com/"
-  },
-  {
-    "id": "2",
     "name": "哔哩哔哩",
-    "path": "/icons/bilibili.svg",
+    "path": "icons/bilibili.com.svg",
     "color": "#FB7299",
-    "url": "https://www.bilibili.com/"
+    "url": "www.bilibili.com"
   },
   {
-    "id": "3",
-    "name": "网易云音乐",
-    "path": "/icons/netease-cloud-music.svg",
-    "color": "#E60026",
-    "url": "https://music.163.com/"
-  },
-  {
-    "id": "4",
-    "name": "腾讯云",
-    "path": "/icons/tencent-cloud.svg",
-    "color": "#0052D9",
-    "url": "https://cloud.tencent.com/"
-  },
-  {
-    "id": "5",
     "name": "百度",
-    "path": "/icons/baidu.svg",
+    "path": "icons/baidu.com.svg",
     "color": "#2932E1",
-    "url": "https://www.baidu.com/"
+    "url": "www.baidu.com"
   },
   {
-    "id": "6",
     "name": "淘宝",
-    "path": "/icons/taobao.svg",
+    "path": "icons/taobao.com.svg",
     "color": "#FF5000",
-    "url": "https://www.taobao.com/"
+    "url": "www.taobao.com"
   },
   {
-    "id": "7",
-    "name": "京东",
-    "path": "/icons/jd.svg",
-    "color": "#E1251B",
-    "url": "https://www.jd.com/"
-  },
-  {
-    "id": "8",
     "name": "微信",
-    "path": "/icons/wechat.svg",
+    "path": "icons/weixin.qq.com.svg",
     "color": "#07C160",
-    "url": "https://weixin.qq.com/"
+    "url": "weixin.qq.com"
   },
   {
-    "id": "9",
     "name": "支付宝",
-    "path": "/icons/alipay.svg",
+    "path": "icons/alipay.com.svg",
     "color": "#1677FF",
-    "url": "https://www.alipay.com/"
+    "url": "www.alipay.com"
   },
   {
-    "id": "10",
-    "name": "字节跳动",
-    "path": "/icons/bytedance.svg",
-    "color": "#000000",
-    "url": "https://www.bytedance.com/"
-  },
-  {
-    "id": "11",
     "name": "抖音",
-    "path": "/icons/douyin.svg",
+    "path": "icons/douyin.com.svg",
     "color": "#000000",
-    "url": "https://www.douyin.com/"
+    "url": "www.douyin.com"
   },
   {
-    "id": "12",
-    "name": "小红书",
-    "path": "/icons/xiaohongshu.svg",
-    "color": "#FF2442",
-    "url": "https://www.xiaohongshu.com/"
-  },
-  {
-    "id": "13",
     "name": "知乎",
-    "path": "/icons/zhihu.svg",
+    "path": "icons/zhihu.com.svg",
     "color": "#0084FF",
-    "url": "https://www.zhihu.com/"
+    "url": "www.zhihu.com"
   },
   {
-    "id": "14",
     "name": "微博",
-    "path": "/icons/weibo.svg",
+    "path": "icons/weibo.com.svg",
     "color": "#E6162D",
-    "url": "https://weibo.com/"
+    "url": "weibo.com"
   },
   {
-    "id": "15",
     "name": "美团",
-    "path": "/icons/meituan.svg",
+    "path": "icons/meituan.com.svg",
     "color": "#FFC300",
-    "url": "https://www.meituan.com/"
+    "url": "www.meituan.com"
   },
   {
-    "id": "16",
-    "name": "滴滴",
-    "path": "/icons/didi.svg",
-    "color": "#FF6600",
-    "url": "https://www.didiglobal.com/"
-  },
-  {
-    "id": "17",
     "name": "小米",
-    "path": "/icons/xiaomi.svg",
+    "path": "icons/mi.com.svg",
     "color": "#FF6900",
-    "url": "https://www.mi.com/"
+    "url": "www.mi.com"
   },
   {
-    "id": "18",
     "name": "华为",
-    "path": "/icons/huawei.svg",
+    "path": "icons/huawei.com.svg",
     "color": "#FF0000",
-    "url": "https://www.huawei.com/"
+    "url": "www.huawei.com"
   },
   {
-    "id": "19",
-    "name": "拼多多",
-    "path": "/icons/pinduoduo.svg",
-    "color": "#E02E24",
-    "url": "https://www.pinduoduo.com/"
-  },
-  {
-    "id": "20",
     "name": "快手",
-    "path": "/icons/kuaishou.svg",
+    "path": "icons/kuaishou.com.svg",
     "color": "#FF6600",
-    "url": "https://www.kuaishou.com/"
+    "url": "www.kuaishou.com"
   },
   {
-    "id": "21",
-    "name": "爱奇艺",
-    "path": "/icons/iqiyi.svg",
-    "color": "#00BE06",
-    "url": "https://www.iqiyi.com/"
-  },
-  {
-    "id": "22",
-    "name": "腾讯视频",
-    "path": "/icons/tencent-video.svg",
-    "color": "#3194FF",
-    "url": "https://v.qq.com/"
-  },
-  {
-    "id": "23",
     "name": "优酷",
-    "path": "/icons/youku.svg",
-    "color": "#00A862",
-    "url": "https://www.youku.com/"
+    "path": "icons/youku.com.svg",
+    "color": "#000000",
+    "url": "www.youku.com"
   },
   {
-    "id": "24",
-    "name": "网易",
-    "path": "/icons/netease.svg",
-    "color": "#E60012",
-    "url": "https://www.163.com/"
-  },
-  {
-    "id": "25",
     "name": "新浪",
-    "path": "/icons/sina.svg",
+    "path": "icons/sina.com.cn.svg",
     "color": "#E6162D",
-    "url": "https://www.sina.com.cn/"
+    "url": "www.sina.com.cn"
   },
   {
-    "id": "26",
-    "name": "360",
-    "path": "/icons/360.svg",
-    "color": "#00A862",
-    "url": "https://www.360.com/"
-  },
-  {
-    "id": "27",
     "name": "搜狗",
-    "path": "/icons/sogou.svg",
+    "path": "icons/sogou.com.svg",
     "color": "#FB6027",
-    "url": "https://www.sogou.com/"
-  },
-  {
-    "id": "28",
-    "name": "今日头条",
-    "path": "/icons/toutiao.svg",
-    "color": "#E85959",
-    "url": "https://www.toutiao.com/"
-  },
-  {
-    "id": "29",
-    "name": "钉钉",
-    "path": "/icons/dingtalk.svg",
-    "color": "#0080FF",
-    "url": "https://www.dingtalk.com/"
-  },
-  {
-    "id": "30",
-    "name": "企业微信",
-    "path": "/icons/wechat-work.svg",
-    "color": "#4AAD19",
-    "url": "https://work.weixin.qq.com/"
+    "url": "www.sogou.com"
   }
 ]

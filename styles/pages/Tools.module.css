@@ -1,0 +1,465 @@
+.page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--background);
+  color: var(--foreground);
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.main {
+  flex: 1;
+  padding: 24px;
+  max-width: 1400px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.container {
+  display: flex;
+  flex-direction: row;
+  gap: 24px;
+  align-items: flex-start;
+}
+
+.editorSection {
+  flex: 1;
+  min-width: 0;
+  background-color: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 24px;
+  transition: border-color 0.2s;
+  display: flex;
+  flex-direction: column;
+}
+
+.rightColumn {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  flex: 0 0 420px;
+  min-width: 0;
+}
+
+.previewSection {
+  background-color: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 24px;
+  transition: border-color 0.2s;
+}
+
+.sectionHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.sectionHeader h2 {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--foreground);
+  margin: 0;
+}
+
+.actionButtons {
+  display: flex;
+  gap: 8px;
+}
+
+.button {
+  padding: 8px 16px;
+  border: 1px solid var(--border-color);
+  background-color: var(--button-group-bg);
+  color: var(--foreground);
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: inherit;
+}
+
+.button:hover {
+  background-color: var(--button-hover-bg);
+  border-color: var(--primary-color);
+}
+
+.codeEditor {
+  width: 100%;
+  min-height: 400px;
+  flex: 1;
+  padding: 12px;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  background-color: var(--input-bg);
+  color: var(--foreground);
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 14px;
+  line-height: 1.5;
+  resize: vertical;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.codeEditor:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.codeEditor::placeholder {
+  color: var(--text-secondary);
+}
+
+.error {
+  margin-top: 12px;
+  padding: 12px;
+  background-color: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  border-radius: 6px;
+  color: #ef4444;
+  font-size: 14px;
+}
+
+:global(.dark) .error {
+  background-color: rgba(239, 68, 68, 0.15);
+  border-color: rgba(239, 68, 68, 0.4);
+}
+
+.previewControls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.previewControls label {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 14px;
+  color: var(--foreground);
+}
+
+.rangeInput {
+  width: 120px;
+  height: 6px;
+  border-radius: 3px;
+  background: var(--button-group-bg);
+  outline: none;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.rangeInput::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--primary-color);
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.rangeInput::-webkit-slider-thumb:hover {
+  background: #2563eb;
+}
+
+.rangeInput::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--primary-color);
+  cursor: pointer;
+  border: none;
+  transition: background 0.2s;
+}
+
+.rangeInput::-moz-range-thumb:hover {
+  background: #2563eb;
+}
+
+.previewControls span {
+  min-width: 50px;
+  font-size: 14px;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.previewContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 24px;
+  background-color: var(--icon-preview-bg);
+  border-radius: 8px;
+  width: 100%;
+  height: 320px;
+  box-sizing: border-box;
+}
+
+:global(.light) .previewContainer {
+  --icon-preview-bg: #f5f5f5;
+}
+
+:global(.dark) .previewContainer {
+  --icon-preview-bg: #1a1a1a;
+}
+
+.preview {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  overflow: visible;
+  flex-shrink: 0;
+}
+
+.preview svg {
+  display: block;
+  flex-shrink: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.settingsGrid {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.settingItem {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.settingItem label {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--foreground);
+}
+
+.textInput,
+.numberInput {
+  padding: 8px 10px;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  background-color: var(--input-bg);
+  color: var(--foreground);
+  font-size: 13px;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  font-family: inherit;
+}
+
+.textInput:focus,
+.numberInput:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.textInput::placeholder {
+  color: var(--text-secondary);
+}
+
+.settingItem span {
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin-left: 6px;
+}
+
+.colorInputWrapper {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.colorInput {
+  width: 40px;
+  height: 32px;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  cursor: pointer;
+  background: none;
+  padding: 0;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+
+.colorInput::-webkit-color-swatch-wrapper {
+  padding: 0;
+}
+
+.colorInput::-webkit-color-swatch {
+  border: none;
+  border-radius: 4px;
+}
+
+.colorInput::-moz-color-swatch {
+  border: none;
+  border-radius: 4px;
+}
+
+.exportButtons {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.primaryButton {
+  padding: 10px 20px;
+  border: none;
+  background-color: var(--primary-color);
+  color: white;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: inherit;
+}
+
+.primaryButton:hover {
+  background-color: #2563eb;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+}
+
+.primaryButton:active {
+  transform: translateY(0);
+}
+
+/* 主题变量 */
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+  --text-secondary: #666666;
+  --border-color: #ebebeb;
+  --card-bg: #ffffff;
+  --input-bg: #ffffff;
+  --button-group-bg: #f5f5f5;
+  --button-hover-bg: #e5e5e5;
+  --button-active-bg: #ffffff;
+  --primary-color: #3b82f6;
+}
+
+:global(.dark) {
+  --background: #0a0a0a;
+  --foreground: #ededed;
+  --text-secondary: #999999;
+  --border-color: #1a1a1a;
+  --card-bg: #141414;
+  --input-bg: #141414;
+  --button-group-bg: #1a1a1a;
+  --button-hover-bg: #2a2a2a;
+  --button-active-bg: #2a2a2a;
+}
+
+:global(.light) {
+  --background: #ffffff;
+  --foreground: #171717;
+  --text-secondary: #666666;
+  --border-color: #ebebeb;
+  --card-bg: #ffffff;
+  --input-bg: #ffffff;
+  --button-group-bg: #f5f5f5;
+  --button-hover-bg: #e5e5e5;
+  --button-active-bg: #ffffff;
+}
+
+/* 响应式设计 */
+@media (max-width: 1024px) {
+  .container {
+    flex-direction: column;
+  }
+
+  .editorSection {
+    width: 100%;
+    flex: none;
+  }
+
+  .rightColumn {
+    flex: 1;
+    width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .main {
+    padding: 16px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .container {
+    gap: 16px;
+    width: 100%;
+  }
+
+  .editorSection {
+    width: 100%;
+    flex: none;
+    box-sizing: border-box;
+  }
+
+  .editorSection,
+  .previewSection {
+    padding: 16px;
+  }
+
+  .sectionHeader {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .settingsGrid {
+    gap: 12px;
+  }
+
+  .exportButtons {
+    flex-direction: column;
+  }
+
+  .primaryButton {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .main {
+    padding: 12px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .container {
+    width: 100%;
+  }
+
+  .editorSection {
+    width: 100%;
+    flex: none;
+    box-sizing: border-box;
+  }
+
+  .editorSection,
+  .previewSection {
+    padding: 12px;
+  }
+
+  .codeEditor {
+    min-height: 150px;
+    font-size: 12px;
+  }
+
+  .previewContainer {
+    padding: 16px;
+    height: 250px;
+  }
+}
