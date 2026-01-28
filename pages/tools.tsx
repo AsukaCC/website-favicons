@@ -23,12 +23,12 @@ export default function Tools() {
   useEffect(() => {
     setMounted(true);
   }, []);
-  
+
   // 默认 SVG 代码
   const defaultSvgCode = `<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg">
   <circle cx="50" cy="50" r="40" fill="#3b82f6" />
 </svg>`;
-  
+
   // 默认状态
   const [svgCode, setSvgCode] = useState(defaultSvgCode);
   const [iconName, setIconName] = useState("icon");
@@ -37,13 +37,13 @@ export default function Tools() {
   const [initialIconName, setInitialIconName] = useState("icon");
   // 用于标记是否已经加载过数据，避免重复加载
   const dataLoadedRef = useRef(false);
-  
+
   // 从 URL 参数加载 SVG 数据
   useEffect(() => {
     if (typeof window === "undefined" || !mounted || !router.isReady || dataLoadedRef.current) return;
-    
+
     const { svg, name } = router.query;
-    
+
     // 从 URL 参数中读取 SVG 数据
     if (svg && typeof svg === "string") {
       try {
@@ -62,7 +62,7 @@ export default function Tools() {
         console.error("Failed to decode SVG from URL:", error);
       }
     }
-    
+
     // 如果没有传入数据，使用默认值（只在首次加载时设置）
     const hasInitialData = svgCode !== defaultSvgCode || iconName !== "icon";
     if (!hasInitialData) {
@@ -81,7 +81,7 @@ export default function Tools() {
   const [previewSize, setPreviewSize] = useState(128);
   const [error, setError] = useState("");
   const svgPreviewRef = useRef<HTMLDivElement>(null);
-  
+
   // 从 SVG 代码中提取初始颜色
   const extractColorFromSvg = (svgText: string): string => {
     try {
@@ -102,7 +102,7 @@ export default function Tools() {
     }
     return "#3b82f6";
   };
-  
+
   // 获取应用颜色后的 SVG
   const getColoredSvg = () => {
     return modifySvgColor(svgCode, iconColor);
@@ -127,7 +127,7 @@ export default function Tools() {
       setError(t.svgFormatError);
     }
   };
-  
+
   // 当 SVG 代码变化时，更新图标颜色
   useEffect(() => {
     const extractedColor = extractColorFromSvg(svgCode);
