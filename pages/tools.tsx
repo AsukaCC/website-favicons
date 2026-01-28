@@ -29,63 +29,53 @@ export default function Tools() {
   <circle cx="50" cy="50" r="40" fill="#3b82f6" />
 </svg>`;
   
-  // 从 URL 参数解析 SVG 代码和名称
-  const parseUrlParams = () => {
-    if (typeof window === "undefined" || !router.isReady) {
-      return { svgCode: defaultSvgCode, iconName: "icon" };
-    }
+  // 默认状态
+  const [svgCode, setSvgCode] = useState(defaultSvgCode);
+  const [iconName, setIconName] = useState("icon");
+  // 保存初始传入的 SVG，用于重置
+  const [initialSvgCode, setInitialSvgCode] = useState(defaultSvgCode);
+  const [initialIconName, setInitialIconName] = useState("icon");
+  // 用于标记是否已经加载过数据，避免重复加载
+  const dataLoadedRef = useRef(false);
+  
+  // 从 URL 参数加载 SVG 数据
+  useEffect(() => {
+    if (typeof window === "undefined" || !mounted || !router.isReady || dataLoadedRef.current) return;
     
     const { svg, name } = router.query;
+    
+    // 从 URL 参数中读取 SVG 数据
     if (svg && typeof svg === "string") {
       try {
         const decodedSvg = decodeURIComponent(svg);
         const decodedName = name && typeof name === "string" ? decodeURIComponent(name) : "icon";
-        return { svgCode: decodedSvg, iconName: decodedName };
+        setSvgCode(decodedSvg);
+        setIconName(decodedName);
+        setInitialSvgCode(decodedSvg);
+        setInitialIconName(decodedName);
+        // 提取并设置图标颜色
+        const extractedColor = extractColorFromSvg(decodedSvg);
+        setIconColor(extractedColor);
+        dataLoadedRef.current = true;
+        return;
       } catch (error) {
         console.error("Failed to decode SVG from URL:", error);
       }
     }
     
-    return { svgCode: defaultSvgCode, iconName: "icon" };
-  };
-  
-  const urlData = parseUrlParams();
-  const [svgCode, setSvgCode] = useState(urlData.svgCode);
-  const [iconName, setIconName] = useState(urlData.iconName);
-  // 保存初始传入的 SVG，用于重置
-  const [initialSvgCode, setInitialSvgCode] = useState(urlData.svgCode);
-  const [initialIconName, setInitialIconName] = useState(urlData.iconName);
-  
-  // 当路由参数变化时，更新 SVG 代码和初始值
-  useEffect(() => {
-    if (router.isReady) {
-      const { svg, name } = router.query;
-      if (svg && typeof svg === "string") {
-        try {
-          const decodedSvg = decodeURIComponent(svg);
-          const decodedName = name && typeof name === "string" ? decodeURIComponent(name) : "icon";
-          setSvgCode(decodedSvg);
-          setIconName(decodedName);
-          setInitialSvgCode(decodedSvg);
-          setInitialIconName(decodedName);
-          // 提取并设置图标颜色
-          const extractedColor = extractColorFromSvg(decodedSvg);
-          setIconColor(extractedColor);
-        } catch (error) {
-          console.error("Failed to decode SVG from URL:", error);
-        }
-      } else {
-        // 如果没有 URL 参数，使用默认值
-        setSvgCode(defaultSvgCode);
-        setIconName("icon");
-        setInitialSvgCode(defaultSvgCode);
-        setInitialIconName("icon");
-        const extractedColor = extractColorFromSvg(defaultSvgCode);
-        setIconColor(extractedColor);
-      }
+    // 如果没有传入数据，使用默认值（只在首次加载时设置）
+    const hasInitialData = svgCode !== defaultSvgCode || iconName !== "icon";
+    if (!hasInitialData) {
+      setSvgCode(defaultSvgCode);
+      setIconName("icon");
+      setInitialSvgCode(defaultSvgCode);
+      setInitialIconName("icon");
+      const extractedColor = extractColorFromSvg(defaultSvgCode);
+      setIconColor(extractedColor);
+      dataLoadedRef.current = true;
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [router.isReady, router.query.svg, router.query.name]);
+  }, [router.isReady, router.query.edit, router.query.svg, router.query.name, mounted]);
   const [iconSize, setIconSize] = useState(64);
   const [iconColor, setIconColor] = useState("#3b82f6");
   const [previewSize, setPreviewSize] = useState(128);

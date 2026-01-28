@@ -9,6 +9,7 @@
  */
 
 import { useState } from "react";
+import { useRouter } from "next/router";
 import ColorInput from "@/components/ColorInput";
 import type { Icon } from "@/types/icon";
 import styles from "@/styles/components/IconCard.module.css";
@@ -98,6 +99,7 @@ export default function IconCard({
   const [isCopying, setIsCopying] = useState(false);
   const { showToast } = useToast();
   const { language: currentLanguage } = useLanguage();
+  const router = useRouter();
   const tCommonLocal = getTranslation(currentLanguage).common;
 
   const iconUrl = icon.url.startsWith("http") ? icon.url : `https://${icon.url}`;
@@ -136,7 +138,7 @@ export default function IconCard({
     }
   };
 
-  // 编辑 SVG：在新标签页打开 tools 页面
+  // 编辑 SVG：跳转到 tools 页面
   const handleEdit = async () => {
     if (!icon.path) return;
     
@@ -162,13 +164,18 @@ export default function IconCard({
       const serializer = new XMLSerializer();
       const modifiedSvg = serializer.serializeToString(svgElement);
       
-      // 将 SVG 内容编码后通过 URL 参数传递
+      // 将 SVG 内容和名称编码后通过 URL 参数传递
       const encodedSvg = encodeURIComponent(modifiedSvg);
       const encodedName = encodeURIComponent(icon.name);
       
-      // 在新标签页打开 tools 页面，传递 SVG 内容和名称
-      const toolsUrl = `/tools?svg=${encodedSvg}&name=${encodedName}`;
-      window.open(toolsUrl, "_blank", "noopener,noreferrer");
+      // 使用 router 跳转到 tools 页面，通过 query 参数传递数据
+      router.push({
+        pathname: "/tools",
+        query: {
+          svg: encodedSvg,
+          name: encodedName,
+        },
+      });
     } catch (error) {
       console.error("Failed to open editor:", error);
       showToast(tCommonLocal.editFailed || "打开编辑器失败", "error");
